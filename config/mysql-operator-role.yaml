@@ -1,0 +1,16 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: app-operator-mysql-azure
+  labels:
+    apps.tanzu.vmware.com/aggregate-to-app-operator-cluster-access: "true"
+rules:
+- apiGroups:
+  - "services.apps.tanzu.vmware.com"
+  resources:
+  - clusterinstanceclasses
+  resourceNames:
+  - mysql-azure
+  verbs:
+  - claim

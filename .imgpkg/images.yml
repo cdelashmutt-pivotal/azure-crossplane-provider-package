@@ -1,0 +1,11 @@
+---
+apiVersion: imgpkg.carvel.dev/v1alpha1
+images:
+- annotations:
+    kbld.carvel.dev/id: crossplane/provider-azure:v0.19.0
+    kbld.carvel.dev/origins: |
+      - resolved:
+          tag: v0.19.0
+          url: crossplane/provider-azure:v0.19.0
+  image: index.docker.io/crossplane/provider-azure@sha256:4e71f9c5dcc19ec91e8ef1016ab4198b6930195d7bbbd03674b01f480cd98610
+kind: ImagesLock

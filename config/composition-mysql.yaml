@@ -1,0 +1,100 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"apiextensions.crossplane.io/v1","kind":"Composition","metadata":{"annotations":{},"labels":{"guide":"quickstart","provider":"azure"},"name":"xmysqlinstances.azure.database.example.org"},"spec":{"compositeTypeRef":{"apiVersion":"database.example.org/v1alpha1","kind":"XMySQLInstance"},"resources":[{"base":{"apiVersion":"azure.crossplane.io/v1alpha3","kind":"ResourceGroup","spec":{"location":"East US"}},"name":"resourcegroup"},{"base":{"apiVersion":"database.azure.crossplane.io/v1beta1","kind":"MySQLServer","spec":{"forProvider":{"administratorLogin":"myadmin","location":"East US","resourceGroupNameSelector":{"matchControllerRef":true},"sku":{"capacity":2,"family":"Gen5","tier":"GeneralPurpose"},"sslEnforcement":"Disabled","storageProfile":{"storageMB":5120},"version":"5.7"},"writeConnectionSecretToRef":{"namespace":"crossplane-system"}}},"connectionDetails":[{"fromConnectionSecretKey":"username"},{"fromConnectionSecretKey":"password"},{"fromConnectionSecretKey":"endpoint","name":"host","type":"FromConnectionSecretKey"},{"name":"database","type":"FromValue","value":"db?createDatabaseIfNotExist=true"},{"name":"port","type":"FromValue","value":"3306"},{"name":"type","type":"FromValue","value":"mysql"},{"name":"provider","type":"FromValue","value":"azure"}],"name":"mysqlserver","patches":[{"fromFieldPath":"metadata.uid","toFieldPath":"spec.writeConnectionSecretToRef.name","transforms":[{"string":{"fmt":"%s-mysql"},"type":"string"}]},{"fromFieldPath":"spec.parameters.size","toFieldPath":"spec.forProvider.storageProfile.storageMB","transforms":[{"map":{"large":"20480","medium":"10240","small":"5120"},"type":"map"},{"convert":{"toType":"int"},"type":"convert"}]}]},{"base":{"apiVersion":"database.azure.crossplane.io/v1alpha3","kind":"MySQLServerFirewallRule","spec":{"forProvider":{"properties":{"endIpAddress":"255.255.255.254","startIpAddress":"0.0.0.0"},"resourceGroupNameSelector":{"matchControllerRef":true},"serverNameSelector":{"matchControllerRef":true}}}},"name":"firewallrule"}],"writeConnectionSecretsToNamespace":"crossplane-system"}}
+  creationTimestamp: "2023-02-22T18:09:15Z"
+  generation: 1
+  labels:
+    guide: quickstart
+    provider: azure
+  name: xmysqlinstances.azure.database.example.org
+  resourceVersion: "30091172"
+  uid: ff16ecf4-a34d-4288-a767-dbc1ad4d2518
+spec:
+  compositeTypeRef:
+    apiVersion: database.example.org/v1alpha1
+    kind: XMySQLInstance
+  publishConnectionDetailsWithStoreConfigRef:
+    name: default
+  resources:
+  - base:
+      apiVersion: azure.crossplane.io/v1alpha3
+      kind: ResourceGroup
+      spec:
+        location: East US
+    name: resourcegroup
+  - base:
+      apiVersion: database.azure.crossplane.io/v1beta1
+      kind: MySQLServer
+      spec:
+        forProvider:
+          administratorLogin: myadmin
+          location: East US
+          resourceGroupNameSelector:
+            matchControllerRef: true
+          sku:
+            capacity: 2
+            family: Gen5
+            tier: GeneralPurpose
+          sslEnforcement: Disabled
+          storageProfile:
+            storageMB: 5120
+          version: "5.7"
+        writeConnectionSecretToRef:
+          namespace: crossplane-system
+    connectionDetails:
+    - fromConnectionSecretKey: username
+    - fromConnectionSecretKey: password
+    - fromConnectionSecretKey: endpoint
+      name: host
+      type: FromConnectionSecretKey
+    - name: database
+      type: FromValue
+      value: db?createDatabaseIfNotExist=true
+    - name: port
+      type: FromValue
+      value: "3306"
+    - name: type
+      type: FromValue
+      value: mysql
+    - name: provider
+      type: FromValue
+      value: azure
+    name: mysqlserver
+    patches:
+    - fromFieldPath: metadata.uid
+      toFieldPath: spec.writeConnectionSecretToRef.name
+      transforms:
+      - string:
+          fmt: '%s-mysql'
+          type: Format
+        type: string
+      type: FromCompositeFieldPath
+    - fromFieldPath: spec.parameters.size
+      toFieldPath: spec.forProvider.storageProfile.storageMB
+      transforms:
+      - map:
+          large: "20480"
+          medium: "10240"
+          small: "5120"
+        type: map
+      - convert:
+          toType: int
+        type: convert
+      type: FromCompositeFieldPath
+  - base:
+      apiVersion: database.azure.crossplane.io/v1alpha3
+      kind: MySQLServerFirewallRule
+      spec:
+        forProvider:
+          properties:
+            endIpAddress: 255.255.255.254
+            startIpAddress: 0.0.0.0
+          resourceGroupNameSelector:
+            matchControllerRef: true
+          serverNameSelector:
+            matchControllerRef: true
+    name: firewallrule
+  writeConnectionSecretsToNamespace: crossplane-system

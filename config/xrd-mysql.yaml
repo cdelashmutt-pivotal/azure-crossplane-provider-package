@@ -1,0 +1,74 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"apiextensions.crossplane.io/v1","kind":"CompositeResourceDefinition","metadata":{"annotations":{},"name":"xmysqlinstances.database.example.org"},"spec":{"claimNames":{"kind":"MySQLInstance","plural":"mysqlinstances"},"connectionSecretKeys":["type","provider","username","password","host","database","port"],"group":"database.example.org","names":{"kind":"XMySQLInstance","plural":"xmysqlinstances"},"versions":[{"name":"v1alpha1","referenceable":true,"schema":{"openAPIV3Schema":{"properties":{"spec":{"description":"The OpenAPIV3Schema of this Composite Resource Definition.","properties":{"parameters":{"properties":{"size":{"description":"Small - 1 GB storage, Medium - 5 GB storage, Large - 20 GB","enum":["small","medium","large"],"type":"string"}},"required":["size"],"type":"object"}},"required":["parameters"],"type":"object"}},"type":"object"}},"served":true}]}}
+  creationTimestamp: "2023-02-22T18:09:15Z"
+  finalizers:
+  - defined.apiextensions.crossplane.io
+  - offered.apiextensions.crossplane.io
+  generation: 1
+  name: xmysqlinstances.database.example.org
+  resourceVersion: "30091178"
+  uid: 45b01b2f-22c2-487d-a163-98debe8f3dc1
+spec:
+  claimNames:
+    kind: MySQLInstance
+    plural: mysqlinstances
+  connectionSecretKeys:
+  - type
+  - provider
+  - username
+  - password
+  - host
+  - database
+  - port
+  group: database.example.org
+  names:
+    kind: XMySQLInstance
+    plural: xmysqlinstances
+  versions:
+  - name: v1alpha1
+    referenceable: true
+    schema:
+      openAPIV3Schema:
+        properties:
+          spec:
+            description: The OpenAPIV3Schema of this Composite Resource Definition.
+            properties:
+              parameters:
+                properties:
+                  size:
+                    description: Small - 1 GB storage, Medium - 5 GB storage, Large
+                      - 20 GB
+                    enum:
+                    - small
+                    - medium
+                    - large
+                    type: string
+                required:
+                - size
+                type: object
+            required:
+            - parameters
+            type: object
+        type: object
+    served: true
+status:
+  conditions:
+  - lastTransitionTime: "2023-02-22T18:09:15Z"
+    reason: WatchingCompositeResource
+    status: "True"
+    type: Established
+  - lastTransitionTime: "2023-02-22T18:09:15Z"
+    reason: WatchingCompositeResourceClaim
+    status: "True"
+    type: Offered
+  controllers:
+    compositeResourceClaimType:
+      apiVersion: database.example.org/v1alpha1
+      kind: MySQLInstance
+    compositeResourceType:
+      apiVersion: database.example.org/v1alpha1
+      kind: XMySQLInstance
